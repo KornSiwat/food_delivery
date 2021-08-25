@@ -34,18 +34,18 @@ class FoodInfo extends StatelessWidget {
           children: [
             Text(
               name,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Text(
               price,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             )
           ],
         ),
         SizedBox(height: 12),
         Text(
           food.detail,
-          style: TextStyle(fontSize: 18),
+          style: TextStyle(fontSize: 20),
         )
       ]));
 }

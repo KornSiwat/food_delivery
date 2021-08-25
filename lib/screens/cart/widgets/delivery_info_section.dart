@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/models/cart.dart';
+import 'package:provider/provider.dart';
 
 class DeliveryInfoSection extends StatelessWidget {
   const DeliveryInfoSection({Key? key}) : super(key: key);
@@ -7,6 +9,7 @@ class DeliveryInfoSection extends StatelessWidget {
   Widget build(BuildContext context) => _section(
         title: _titleText(title: "Delivery"),
         addressInfo: _deliveryInfo(
+          restaurant: _cart(context).restaurant?.name ?? "restaurant name",
           name: "Siwat Ponpued",
           phoneNumber: "0971077427",
           address: "97/9, Banglen, Bangkok, Thailand",
@@ -38,10 +41,12 @@ class DeliveryInfoSection extends StatelessWidget {
         ),
       );
 
-  Widget _deliveryInfo(
-          {required String name,
-          required String phoneNumber,
-          required String address}) =>
+  Widget _deliveryInfo({
+    required String restaurant,
+    required String name,
+    required String phoneNumber,
+    required String address,
+  }) =>
       Row(
         children: [
           Expanded(
@@ -60,17 +65,14 @@ class DeliveryInfoSection extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        name,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        "from",
+                        style: TextStyle(fontSize: 16),
                       ),
                       SizedBox(
-                        width: 8,
+                        width: 4,
                       ),
                       Text(
-                        phoneNumber,
+                        restaurant,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -79,14 +81,52 @@ class DeliveryInfoSection extends StatelessWidget {
                     ],
                   ),
                   SizedBox(
-                    height: 8,
+                    height: 4,
                   ),
-                  Text(
-                    address,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "to",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      SizedBox(
+                        width: 4,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                name,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                phoneNumber,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            address,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -94,4 +134,6 @@ class DeliveryInfoSection extends StatelessWidget {
           ),
         ],
       );
+
+  Cart _cart(context) => Provider.of<Cart>(context, listen: true);
 }

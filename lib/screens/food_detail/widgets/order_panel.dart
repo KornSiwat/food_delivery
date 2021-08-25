@@ -60,7 +60,7 @@ class _OrderPanelState extends State<OrderPanel> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
             label,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 12),
           Row(
@@ -147,7 +147,7 @@ class _OrderPanelState extends State<OrderPanel> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 label,
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 20),
               ),
             ),
             style: ElevatedButton.styleFrom(primary: Colors.redAccent)),

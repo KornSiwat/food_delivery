@@ -23,7 +23,7 @@ class RestaurantItem extends StatelessWidget {
           behavior: HitTestBehavior.translucent,
           onTap: () => tapHandler(),
           child: Container(
-              margin: const EdgeInsets.all(16.0),
+              margin: const EdgeInsets.all(32.0),
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(

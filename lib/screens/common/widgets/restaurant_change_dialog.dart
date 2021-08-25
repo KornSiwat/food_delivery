@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class RestaurantChangeDialog extends StatelessWidget {
-  const RestaurantChangeDialog({Key? key}) : super(key: key);
+  const RestaurantChangeDialog({Key? key, required this.proceedHandler})
+      : super(key: key);
+  final Function proceedHandler;
 
   @override
   Widget build(BuildContext context) => _dialog(
@@ -10,11 +12,14 @@ class RestaurantChangeDialog extends StatelessWidget {
         buttons: [
           _cancelButton(
             label: "cancel",
-            tapHandler: () => Navigator.pop(context, false),
+            tapHandler: () => Navigator.pop(context),
           ),
           _proceedButton(
             label: "proceed",
-            tapHandler: () => Navigator.pop(context, true),
+            tapHandler: () {
+              Navigator.pop(context);
+              proceedHandler();
+            },
           )
         ],
       );

@@ -13,10 +13,14 @@ class FoodRow extends StatelessWidget {
   final Restaurant restaurant;
 
   @override
-  Widget build(BuildContext context) => _foodRow(context,
-      image: _foodImage(image: AssetImage("images/foods/pizza.jpeg")),
-      info: _foodInfo(food: food),
-      tapHandler: () => _navigateToFoodDetailScreen(context, food: food));
+  Widget build(BuildContext context) => _foodRow(
+        context,
+        image: _foodImage(image: AssetImage("images/foods/pizza.jpeg")),
+        info: _foodInfo(food: food),
+        tapHandler: () => _cart(context).isCartBelongToRestaurant(restaurant)
+            ? _navigateToFoodDetailScreen(context)
+            : _promptRestaurantChangeDialog(context),
+      );
 
   Widget _foodRow(
     BuildContext context, {
@@ -65,41 +69,43 @@ class FoodRow extends StatelessWidget {
                     children: [
                       Text(
                         food.name,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       SizedBox(height: 2),
-                      Text(food.detail),
+                      Text(
+                        food.detail,
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
                     ]),
                 Text(
                   food.price.toString(),
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 )
               ])));
 
   Cart _cart(BuildContext context) => Provider.of<Cart>(context, listen: false);
 
-  Future<bool> _promptRestaurantChangeDialog(BuildContext context) async =>
-      await showDialog(
-              context: context, builder: (context) => RestaurantChangeDialog())
-          .then((value) => value ?? false);
+  Future<void> _promptRestaurantChangeDialog(BuildContext context) =>
+      showDialog(
+        context: context,
+        builder: (context) => RestaurantChangeDialog(
+          proceedHandler: () {
+            _cart(context).empty();
+            _navigateToFoodDetailScreen(context);
+          },
+        ),
+      );
 
-  Future<void> _navigateToFoodDetailScreen(
-    BuildContext context, {
-    required Food food,
-  }) async {
-    Cart cart = _cart(context);
-
-    if (!cart.isCartBelongToRestaurant(restaurant)) {
-      bool proceedToNewRestaurant =
-          await _promptRestaurantChangeDialog(context);
-
-      if (proceedToNewRestaurant) {
-        cart.empty();
-      } else
-        return;
-    }
-
-    cart.restaurant = restaurant;
+  void _navigateToFoodDetailScreen(BuildContext context) async {
+    _cart(context).restaurant = restaurant;
 
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => FoodDetailScreen(food: food)));
