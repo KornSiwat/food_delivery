@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/src/models/cart.dart';
 import 'package:food_delivery/src/models/food_order.dart';
-import 'package:food_delivery/src/screens/cart/widgets/food_order_row.dart';
+import 'package:food_delivery/src/screens/cart_summary/widgets/food_order_row.dart';
 import 'package:provider/provider.dart';
 
 class FoodOrderSection extends StatelessWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/src/screens/cart/cart_summary_screen.dart';
+import 'package:food_delivery/src/screens/cart_summary/cart_summary_screen.dart';
 
 class CartFloatingButton extends StatelessWidget {
   const CartFloatingButton({Key? key}) : super(key: key);

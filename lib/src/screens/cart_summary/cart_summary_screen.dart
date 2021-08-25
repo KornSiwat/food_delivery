@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/src/screens/cart/widgets/delivery_info_section.dart';
-import 'package:food_delivery/src/screens/cart/widgets/food_order_section.dart';
-import 'package:food_delivery/src/screens/cart/widgets/payment_section.dart';
+import 'package:food_delivery/src/screens/cart_summary/widgets/delivery_info_section.dart';
+import 'package:food_delivery/src/screens/cart_summary/widgets/food_order_section.dart';
+import 'package:food_delivery/src/screens/cart_summary/widgets/payment_section.dart';
+import 'package:food_delivery/src/screens/cart_summary/widgets/price_summary_section.dart';
 import 'package:food_delivery/src/screens/order_success/order_success_screen.dart';
 
 class CartSummaryScreen extends StatelessWidget {
@@ -15,6 +16,7 @@ class CartSummaryScreen extends StatelessWidget {
           addressSection: DeliveryInfoSection(),
           foodOrderSection: FoodOrderSection(),
           paymentSection: PaymentSection(),
+          priceSummarySection: PriceSummarySection(),
           orderButton: _orderButton(
             label: "order",
             tapHandler: () => _navigateToOrderSuccessScreen(context),
@@ -43,6 +45,7 @@ class CartSummaryScreen extends StatelessWidget {
     required Widget addressSection,
     required Widget foodOrderSection,
     required Widget paymentSection,
+    required Widget priceSummarySection,
     required Widget orderButton,
   }) =>
       SafeArea(
@@ -55,6 +58,7 @@ class CartSummaryScreen extends StatelessWidget {
                   addressSection,
                   foodOrderSection,
                   paymentSection,
+                  priceSummarySection,
                 ],
               ),
             ),

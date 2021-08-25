@@ -19,6 +19,9 @@ class Cart extends ChangeNotifier {
   FoodOrder? getFoodOrderByFoodID(FoodID foodID) =>
       foodOrders.firstWhereOrNull((foodOrder) => foodOrder.food.id == foodID);
 
+  int totalPrice() =>
+      foodOrders.fold(0, (sum, foodOrder) => (sum + foodOrder.totalPrice()));
+
   void update(FoodOrder foodOrder) {
     _foodOrders[foodOrder.food.id] = foodOrder;
 
