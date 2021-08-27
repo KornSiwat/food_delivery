@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/src/models/cart.dart';
-import 'package:food_delivery/src/models/food_order.dart';
-import 'package:food_delivery/src/screens/cart_summary/widgets/food_order_row.dart';
-import 'package:provider/provider.dart';
+import 'package:food_delivery/src/models/food_item.dart' as model;
+import 'package:food_delivery/src/screens/cart_summary/widgets/food_item.dart';
 
-class FoodOrderSection extends StatelessWidget {
-  const FoodOrderSection({Key? key}) : super(key: key);
+class FoodItemSection extends StatelessWidget {
+  const FoodItemSection({Key? key, required this.foodItems}) : super(key: key);
+
+  final List<model.FoodItem> foodItems;
 
   @override
   Widget build(BuildContext context) => _section(
         title: _titleText(title: "Orders"),
-        foodOrderList: _foodOrderList(foodOrders: _foodOrders(context)),
+        foodOrderList: _foodItemList(foodItems: foodItems),
       );
 
   Widget _section({required Widget title, required Widget foodOrderList}) =>
@@ -38,22 +38,19 @@ class FoodOrderSection extends StatelessWidget {
         ),
       );
 
-  Widget _foodOrderList({required List<FoodOrder> foodOrders}) => Row(
+  Widget _foodItemList({required List<model.FoodItem> foodItems}) => Row(
         children: [
           Expanded(
             child: Column(
-                children: foodOrders
+                children: foodItems
                     .map(
-                      (foodOrder) => Container(
+                      (foodItem) => Container(
                         margin: EdgeInsets.only(bottom: 8),
-                        child: FoodOrderRow(foodOrder: foodOrder),
+                        child: FoodItem(foodItem: foodItem),
                       ),
                     )
                     .toList()),
           ),
         ],
       );
-
-  List<FoodOrder> _foodOrders(BuildContext context) =>
-      Provider.of<Cart>(context, listen: true).foodOrders;
 }

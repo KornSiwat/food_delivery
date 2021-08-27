@@ -1,28 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/src/models/food.dart';
-import 'package:food_delivery/src/models/food_order.dart';
+import 'package:food_delivery/src/models/food_item.dart' as model;
 import 'package:food_delivery/src/screens/food_detail/food_detail_screen.dart';
 
-class FoodOrderRow extends StatelessWidget {
-  const FoodOrderRow({Key? key, required this.foodOrder}) : super(key: key);
-  final FoodOrder foodOrder;
+class FoodItem extends StatelessWidget {
+  const FoodItem({
+    Key? key,
+    required this.foodItem,
+  }) : super(key: key);
+
+  final model.FoodItem foodItem;
 
   @override
   Widget build(BuildContext context) {
-    return _foodOrderRow(context,
-        foodOrderInfo: _foodOrderInfo(
-          quantity: foodOrder.quantity.toString(),
-          name: foodOrder.food.name,
-          note: foodOrder.note,
-          price: foodOrder.totalPrice().toString(),
+    return _foodItemRow(context,
+        foodItemInfo: _foodItemInfo(
+          quantity: foodItem.quantity.toString(),
+          name: foodItem.food.name,
+          note: foodItem.note,
+          price: foodItem.totalPrice().toString(),
         ),
         tapHandler: () =>
-            _navigateToFoodDetailScreen(context, food: foodOrder.food));
+            _navigateToFoodDetailScreen(context, food: foodItem.food));
   }
 
-  Widget _foodOrderRow(
+  Widget _foodItemRow(
     BuildContext context, {
-    required Widget foodOrderInfo,
+    required Widget foodItemInfo,
     required Function tapHandler,
   }) =>
       GestureDetector(
@@ -39,12 +43,12 @@ class FoodOrderRow extends StatelessWidget {
           // color: Colors.black,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: foodOrderInfo,
+            child: foodItemInfo,
           ),
         ),
       );
 
-  Widget _foodOrderInfo({
+  Widget _foodItemInfo({
     required String quantity,
     required String name,
     required String note,
@@ -114,7 +118,7 @@ class FoodOrderRow extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => FoodDetailScreen(food: food),
+          builder: (context) => FoodDetailScreen(food),
         ),
       );
 }

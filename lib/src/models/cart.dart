@@ -1,43 +1,55 @@
-import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
-import 'package:food_delivery/src/models/food_order.dart';
+import 'package:food_delivery/src/models/food_item.dart';
 import 'package:food_delivery/src/models/restaurant.dart'; // You have to add this manually, for some reason it cannot be added automatically
 
-typedef FoodID = String;
+typedef FoodId = String;
 
-class Cart extends ChangeNotifier {
-  Restaurant? restaurant;
-  Map<FoodID, FoodOrder> _foodOrders = {};
+class Cart {
+  // Restaurant? restaurant;
+  // Map<FoodId, FoodItem> _foodItems = {};
 
-  List<FoodOrder> get foodOrders => _foodOrders.values.toList();
+  Cart(this.restaurant, this._foodItems);
 
-  bool isCartBelongToRestaurant(Restaurant restaurant) =>
-      this.restaurant == restaurant || this.restaurant == null;
-
-  bool isEmpty() => foodOrders.isEmpty;
-
-  FoodOrder? getFoodOrderByFoodID(FoodID foodID) =>
-      foodOrders.firstWhereOrNull((foodOrder) => foodOrder.food.id == foodID);
-
-  int totalPrice() =>
-      foodOrders.fold(0, (sum, foodOrder) => (sum + foodOrder.totalPrice()));
-
-  void update(FoodOrder foodOrder) {
-    _foodOrders[foodOrder.food.id] = foodOrder;
-
-    notifyListeners();
+  Cart copy() {
+    return Cart(restaurant, _foodItems);
   }
 
-  void removeFoodOrder(FoodID foodID) {
-    _foodOrders.remove(foodID);
+  Restaurant? restaurant;
+  Map<FoodId, FoodItem> _foodItems = {};
 
-    notifyListeners();
+  List<FoodItem> get foodItems {
+    return _foodItems.values.toList();
+  }
+
+  FoodItem? getFoodItem(FoodId foodId) {
+    return foodItems.firstWhereOrNull((foodItem) => foodItem.food.id == foodId);
+  }
+
+  bool isCartBelongToRestaurant(Restaurant restaurant) {
+    return this.restaurant == restaurant || this.restaurant == null;
+  }
+
+  bool isEmpty() {
+    return foodItems.isEmpty;
+  }
+
+  int totalPrice() {
+    return foodItems.fold(
+      0,
+      (sum, foodItem) => (sum + foodItem.totalPrice()),
+    );
+  }
+
+  void add(FoodItem foodItem) {
+    _foodItems[foodItem.food.id] = foodItem;
+  }
+
+  void removeFoodItem(FoodId foodId) {
+    _foodItems.remove(foodId);
   }
 
   void empty() {
     restaurant = null;
-    _foodOrders.clear();
-
-    notifyListeners();
+    _foodItems.clear();
   }
 }

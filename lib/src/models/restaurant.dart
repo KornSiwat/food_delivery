@@ -1,6 +1,7 @@
 class Restaurant {
-  final String id;
-  final String name;
+  Restaurant(this.id, this.imageUrl, this.name);
 
-  Restaurant(this.id, this.name);
+  final String id;
+  final String imageUrl;
+  final String name;
 }

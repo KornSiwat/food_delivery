@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/src/models/cart.dart';
-import 'package:provider/provider.dart';
 
 class PriceSummarySection extends StatelessWidget {
-  const PriceSummarySection({Key? key}) : super(key: key);
+  const PriceSummarySection({
+    Key? key,
+    required this.cart,
+  }) : super(key: key);
+
+  final Cart cart;
 
   @override
   Widget build(BuildContext context) => _section(
         title: _titleText(title: "Total Price"),
         priceSummary: _priceSummary(
-          totalPrice: _cart(context).totalPrice().toString(),
+          totalPrice: cart.totalPrice().toString(),
         ),
       );
 
@@ -76,6 +80,4 @@ class PriceSummarySection extends StatelessWidget {
           ),
         ],
       );
-
-  Cart _cart(BuildContext context) => Provider.of<Cart>(context, listen: true);
 }

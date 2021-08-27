@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/src/models/cart.dart';
-import 'package:provider/provider.dart';
+import 'package:food_delivery/src/models/restaurant.dart';
 
 class DeliveryInfoSection extends StatelessWidget {
-  const DeliveryInfoSection({Key? key}) : super(key: key);
+  const DeliveryInfoSection({
+    Key? key,
+    required this.restaurant,
+  }) : super(key: key);
+
+  final Restaurant restaurant;
 
   @override
   Widget build(BuildContext context) => _section(
         title: _titleText(title: "Delivery"),
         addressInfo: _deliveryInfo(
-          restaurant: _cart(context).restaurant?.name ?? "restaurant name",
+          restaurant: restaurant.name,
           name: "Siwat Ponpued",
           phoneNumber: "0971077427",
           address: "97/9, Banglen, Bangkok, Thailand",
@@ -134,6 +138,4 @@ class DeliveryInfoSection extends StatelessWidget {
           ),
         ],
       );
-
-  Cart _cart(context) => Provider.of<Cart>(context, listen: true);
 }

@@ -1,91 +1,112 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_delivery/src/app/cubits/cart_cubit.dart';
+import 'package:food_delivery/src/models/cart.dart';
+import 'package:food_delivery/src/screens/cart_summary/bloc/cart_summary_screen_bloc.dart';
 import 'package:food_delivery/src/screens/cart_summary/widgets/delivery_info_section.dart';
-import 'package:food_delivery/src/screens/cart_summary/widgets/food_order_section.dart';
+import 'package:food_delivery/src/screens/cart_summary/widgets/foot_item_list.dart';
+import 'package:food_delivery/src/screens/cart_summary/widgets/order_button.dart';
 import 'package:food_delivery/src/screens/cart_summary/widgets/payment_section.dart';
 import 'package:food_delivery/src/screens/cart_summary/widgets/price_summary_section.dart';
-import 'package:food_delivery/src/screens/order_success/order_success_screen.dart';
+import 'package:food_delivery/src/screens/common/widgets/loading_indicator.dart';
+import 'package:food_delivery/src/screens/common/widgets/screen.dart';
 
 class CartSummaryScreen extends StatelessWidget {
-  const CartSummaryScreen({Key? key}) : super(key: key);
+  CartSummaryScreen() : super();
 
   @override
-  Widget build(BuildContext context) => _screen(
-        tapHandler: () => FocusManager.instance.primaryFocus?.unfocus(),
-        appBar: _appBar(title: "Cart Summary"),
-        body: _body(
-          addressSection: DeliveryInfoSection(),
-          foodOrderSection: FoodOrderSection(),
-          paymentSection: PaymentSection(),
-          priceSummarySection: PriceSummarySection(),
-          orderButton: _orderButton(
-            label: "order",
-            tapHandler: () => _navigateToOrderSuccessScreen(context),
+  Widget build(BuildContext context) {
+    return BlocBuilder<CartCubit, Cart>(
+      builder: (context, state) {
+        return Screen(
+          title: _title(context),
+          content: _content(context),
+          floatingActionButton: _floatingActionButton(context),
+        );
+      },
+    );
+  }
+
+  String _title(BuildContext context) {
+    return "Cart Summary";
+  }
+
+  Widget _content(BuildContext context) {
+    return BlocProvider(
+      create: (_) => CartSummaryScreenBloc(context.read<CartCubit>()),
+      child: BlocBuilder<CartSummaryScreenBloc, CartSummaryScreenState>(
+        builder: (context, state) {
+          return _mapStateToContent(context, state);
+        },
+      ),
+    );
+  }
+
+  Widget? _floatingActionButton(BuildContext context) {
+    return Container();
+  }
+
+  Widget _mapStateToContent(
+    BuildContext context,
+    CartSummaryScreenState state,
+  ) {
+    if (state is InitialState) {
+      return _mapInitialStateToContent(context, state);
+    } else if (state is LoadInProgressState) {
+      return _mapLoadInProgressStateToContent(context, state);
+    } else if (state is LoadSuccessState) {
+      return _mapLoadSuccessStateToContent(context, state);
+    } else if (state is LoadFailureState) {
+      return _mapLoadFailureStateToContent(context, state);
+    } else {
+      return Container();
+    }
+  }
+
+  Widget _mapInitialStateToContent(
+    BuildContext context,
+    CartSummaryScreenState state,
+  ) {
+    context.read<CartSummaryScreenBloc>().add(StartedEvent());
+
+    return Container();
+  }
+
+  Widget _mapLoadInProgressStateToContent(
+    BuildContext context,
+    CartSummaryScreenState state,
+  ) {
+    return LoadingIndicator();
+  }
+
+  Widget _mapLoadSuccessStateToContent(
+    BuildContext context,
+    LoadSuccessState state,
+  ) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: ListView(
+            children: [
+              DeliveryInfoSection(restaurant: state.cart.restaurant!),
+              FoodItemSection(foodItems: state.cart.foodItems),
+              PaymentSection(),
+              PriceSummarySection(cart: state.cart),
+            ],
           ),
         ),
-      );
+        OrderButton(),
+      ],
+    );
+  }
 
-  Widget _screen({
-    required Function tapHandler,
-    required AppBar appBar,
-    required Widget body,
-  }) =>
-      GestureDetector(
-        onTap: () => tapHandler,
-        child: Scaffold(
-          appBar: appBar,
-          body: body,
-        ),
-      );
+  Widget _mapLoadFailureStateToContent(
+    BuildContext context,
+    CartSummaryScreenState state,
+  ) {
+    context.read<CartSummaryScreenBloc>().add(DataLoadingRetriedEvent());
 
-  AppBar _appBar({required String title}) => AppBar(
-        title: Text(title),
-      );
-
-  Widget _body({
-    required Widget addressSection,
-    required Widget foodOrderSection,
-    required Widget paymentSection,
-    required Widget priceSummarySection,
-    required Widget orderButton,
-  }) =>
-      SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: ListView(
-                children: [
-                  addressSection,
-                  foodOrderSection,
-                  paymentSection,
-                  priceSummarySection,
-                ],
-              ),
-            ),
-            orderButton,
-          ],
-        ),
-      );
-
-  Widget _orderButton({
-    required String label,
-    required Function tapHandler,
-  }) =>
-      Center(
-          child: Container(
-        margin: EdgeInsets.only(bottom: 16),
-        child: ElevatedButton(
-            onPressed: () => tapHandler(),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                label,
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-            style: ElevatedButton.styleFrom(primary: Colors.redAccent)),
-      ));
-
-  void _navigateToOrderSuccessScreen(BuildContext context) => Navigator.push(
-      context, MaterialPageRoute(builder: (context) => OrderSuccessScreen()));
+    return Container();
+  }
 }

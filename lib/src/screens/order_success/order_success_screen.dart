@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/src/models/cart.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_delivery/src/app/cubits/cart_cubit.dart';
 import 'package:food_delivery/src/screens/restaurant_feed/restaurant_feed_screen.dart';
-import 'package:provider/provider.dart';
 
 class OrderSuccessScreen extends StatelessWidget {
   const OrderSuccessScreen({Key? key}) : super(key: key);
@@ -78,9 +78,9 @@ class OrderSuccessScreen extends StatelessWidget {
             style: ElevatedButton.styleFrom(primary: Colors.redAccent)),
       ));
 
-  Cart _cart(BuildContext context) => Provider.of<Cart>(context, listen: false);
-
-  void _clearCart(BuildContext context) => _cart(context).empty();
+  void _clearCart(BuildContext context) {
+    context.read<CartCubit>().empty();
+  }
 
   void _navigateToRestaurantFeed(BuildContext context) =>
       Navigator.pushAndRemoveUntil(

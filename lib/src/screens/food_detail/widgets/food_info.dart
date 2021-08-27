@@ -6,25 +6,36 @@ class FoodInfo extends StatelessWidget {
   final Food food;
 
   @override
-  Widget build(BuildContext context) => _foodInfo(
-        image: _image(image: AssetImage('images/foods/pizza.jpeg')),
-        info: _info(name: food.name, price: food.price.toString()),
-      );
+  Widget build(BuildContext context) {
+    return _foodInfo(
+      image: _image(imageUrl: food.imageUrl),
+      info: _info(name: food.name, price: food.price.toString()),
+    );
+  }
 
   Widget _foodInfo({
     required Widget image,
     required Widget info,
-  }) =>
-      Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        image,
-        info,
-      ]);
+  }) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      image,
+      info,
+    ]);
+  }
 
-  Widget _image({required ImageProvider image}) => Image(
-        height: 240,
-        image: image,
-        fit: BoxFit.cover,
-      );
+  Widget _image({required String imageUrl}) {
+    return imageUrl.isEmpty
+        ? Image(
+            height: 240,
+            image: AssetImage('images/foods/default_food.jpeg'),
+            fit: BoxFit.cover,
+          )
+        : Image.network(
+            imageUrl,
+            height: 240,
+            fit: BoxFit.cover,
+          );
+  }
 
   Widget _info({required String name, required String price}) => Padding(
       padding: const EdgeInsets.all(24.0),

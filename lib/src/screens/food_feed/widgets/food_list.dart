@@ -1,51 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/src/facades/food_facade.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:food_delivery/src/app/cubits/cart_cubit.dart';
+import 'package:food_delivery/src/models/cart.dart';
 import 'package:food_delivery/src/models/food.dart';
 import 'package:food_delivery/src/models/restaurant.dart';
-import 'package:food_delivery/src/screens/common/widgets/loading_indicator.dart';
-import 'package:food_delivery/src/screens/food_feed/widgets/food_row.dart';
+import 'package:food_delivery/src/screens/common/widgets/restaurant_change_dialog.dart';
+import 'package:food_delivery/src/screens/food_detail/food_detail_screen.dart';
 
-class FoodList extends StatefulWidget {
-  const FoodList({Key? key, required this.restaurant}) : super(key: key);
+part 'food_item.dart';
+
+class FoodList extends StatelessWidget {
+  const FoodList({
+    Key? key,
+    required this.restaurant,
+    required this.foods,
+  }) : super(key: key);
+
   final Restaurant restaurant;
+  final List<Food> foods;
 
   @override
-  _FoodListState createState() => _FoodListState(restaurant);
-}
-
-class _FoodListState extends State<FoodList> {
-  _FoodListState(this._restaurant);
-  final Restaurant _restaurant;
-  late final Future<List<Food>> _foods =
-      FoodFacade().fetchFoods(_restaurant.id);
-
-  @override
-  Widget build(BuildContext context) => _foodList(
-        foods: _foods,
-        restaurant: _restaurant,
-      );
+  Widget build(BuildContext context) {
+    return _foodList(
+      restaurant: restaurant,
+      foods: foods,
+    );
+  }
 
   Widget _foodList({
+    required List<Food> foods,
     required Restaurant restaurant,
-    required Future<List<Food>> foods,
-  }) =>
-      FutureBuilder(
-        future: foods,
-        builder: (BuildContext context, AsyncSnapshot<List<Food>> foods) =>
-            foods.hasData
-                ? _loadedFoodList(foods: foods.data!, restaurant: restaurant)
-                : LoadingIndicator(),
-      );
+  }) {
+    return ListView.separated(
+      itemCount: foods.length,
+      itemBuilder: (
+        BuildContext context,
+        int index,
+      ) {
+        Food food = foods[index];
 
-  Widget _loadedFoodList(
-          {required List<Food> foods, required Restaurant restaurant}) =>
-      ListView.separated(
-        itemCount: foods.length,
-        itemBuilder: (BuildContext context, int index) {
-          Food food = foods[index];
-
-          return FoodRow(food: food, restaurant: _restaurant);
-        },
-        separatorBuilder: (BuildContext context, int index) => const Divider(),
-      );
+        return FoodItem(food: food, restaurant: restaurant);
+      },
+      separatorBuilder: (
+        BuildContext context,
+        int index,
+      ) {
+        return const Divider();
+      },
+    );
+  }
 }
